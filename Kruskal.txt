@@ -1,0 +1,102 @@
+type
+  rec=record
+  x,y:longint;
+  s:real;
+end;
+var
+  n,m:longint;
+  ans,s:real;
+  a:array[0..1000000] of rec;
+  p:array[0..1000000] of longint;
+  f:array[0..1000000] of boolean;
+  t:boolean;
+
+procedure sort(l,r: longint);
+var
+  i,j:longint;
+  x:real;
+  y:rec;
+begin
+  i:=l;
+  j:=r;
+  x:=a[(l+r) div 2].s;
+  repeat
+    while a[i].s<x do
+      inc(i);
+    while x<a[j].s do
+      dec(j);
+    if not(i>j) then
+    begin
+      y:=a[i];
+      a[i]:=a[j];
+      a[j]:=y;
+      inc(i);
+      j:=j-1;
+    end;
+    until i>j;
+    if l<j then
+      sort(l,j);
+    if i<r then
+      sort(i,r);
+end;
+
+function find(t:longint):longint;
+begin
+  if p[t]=0 then exit(t);
+  p[t]:=find(p[t]);
+  find:=p[t];
+end;
+
+procedure init;
+var
+a1,b,i:longint;
+c:real;
+begin
+  fillchar(s,sizeof(f),false);
+  readln(s);
+  readln(n);
+  for i:=1 to n do
+  p[i]:=i;
+  m:=0;
+  repeat
+    inc(m);
+    readln(a1,b,c);
+    a[m].x:=a1;
+    a[m].y:=b;
+    a[m].s:=c;
+    f[a1]:=true;
+    f[b]:=true;
+  until eoln;
+  for i:=1 to n do
+    if not f[i] then
+    begin
+    writeln('Impossible');
+    halt;
+  end;
+end;
+procedure main;
+var
+i,j,f1,f2:longint;
+begin
+  sort(1,m);
+  i:=1;
+  ans:=0;
+  fillchar(p,sizeof(p),0);
+  for j:=1 to n-1 do
+  begin
+    while find(a[i].x)=find(a[i].y) do
+      inc(i);
+    f1:=find(a[i].x);
+    f2:=find(a[i].y);
+    p[f2]:=f1;
+    ans:=ans+a[i].s;
+  end;
+  if ans<=s then
+    writeln('Need ',ans:0:2,' miles of cable') else
+    writeln('Impossible');
+end;
+
+begin
+init;
+main;
+end.

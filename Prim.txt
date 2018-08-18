@@ -1,0 +1,41 @@
+var
+n,i,j,ans,min,k:longint;
+a:array[1..101,1..101] of longint;
+use:array[1..101] of boolean;
+dis:array[1..101] of longint;
+begin
+  readln(n);
+  fillchar(use,sizeof(use),true);
+  use[1]:=false;
+  for i:=1 to n do
+  begin
+    for j:=1 to n do
+      read(a[i,j]);
+      readln;
+    end;
+  for i:=1 to n do
+    dis[i]:=a[1,i];
+  for i:=1 to n-1 do
+  begin
+    min:=maxlongint;
+    for j:=1 to n do
+      if (use[j])and(dis[j]<min) then
+      begin
+        k:=j;
+        min:=dis[j];
+      end;
+    use[k]:=false;
+    inc(ans,dis[k]);
+    for j:=1 to n do
+      if (use[j])and(a[k,j]<dis[j]) then begin
+        dis[j]:=a[k,j];
+    end;
+  end;
+writeln(ans);
+end.
+
+
+
+
+
+
